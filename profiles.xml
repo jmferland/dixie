@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profilesXml>
+    <profiles>
+        <profile>
+            <id>netbeans-private</id>
+            <activation>
+                <property>
+                    <name>netbeans.execution</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <netbeans.deployment.server.id>tomcat60:home=/usr/share/tomcat/apache-tomcat-6.0.18.1:base=apache-tomcat-6.0.18_base</netbeans.deployment.server.id>
+            </properties>
+        </profile>
+    </profiles>
+</profilesXml>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/dixie">
+  <!-- \see http://commons.apache.org/dbcp/configuration.html
+         \see http://tomcat.apache.org/tomcat-6.0-doc/jndi-datasource-examples-howto.html
+
+         # Setup the database and user:
+         $> mysql -u root -p
+         mysql> CREATE DATABASE dixie;
+         mysql> GRANT EXECUTE \
+                  ON dixie.* \
+                  TO 'dixie_sproc'@'localhost' \
+                  IDENTIFIED BY 'dixie_sproc';
+         # Add the tables, stored procedures, triggers, etc.
+         $> mysql -u root -p -f dixie < dixie_tables.sql
+         $> mysql -u root -p -f dixie < dixie_stored_procedures.sql
+         $> mysql -u root -p -f dixie < dixie_triggers.sql
+         -->
+  <Resource auth="Container" 
+  			driverClassName="com.mysql.jdbc.Driver"
+  			logAbandoned="false"
+  			maxActive="30" 
+  			maxIdle="10" 
+  			maxOpenPreparedStatements="1000" 
+  			maxWait="5000" 
+  			minIdle="0" 
+  			name="jdbc/dixie_sproc" 
+  			password="dixie_sproc" 
+  			poolPreparedStatements="true" 
+  			removeAbandoned="true" 
+  			removeAbandonedTimeout="300" 
+  			testOnBorrow="true" 
+  			testWhileIdle="true" 
+  			timeBetweenEvictionRunsMillis="1000" 
+  			type="javax.sql.DataSource" 
+  			url="jdbc:mysql://localhost:3306/dixie?autoReconnect=true&amp;noAccessToProcedureBodies=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8"
+  			username="dixie_sproc"
+  			validationQuery="SELECT 1=1"/>
+</Context>

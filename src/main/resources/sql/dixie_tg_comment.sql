@@ -1,0 +1,32 @@
+-- Used to do something, leaving around so there is an example for triggers if
+-- we ever implement them in the future.
+-- delimiter //
+-- ------------------------------------------------------------
+-- afterInsertComment
+-- ------------------------------------------------------------
+-- \author Jonathan Ferland
+-- \created April 10, 2009
+-- ------------------------------------------------------------
+-- DROP TRIGGER IF EXISTS afterInsertComment;
+-- CREATE TRIGGER afterInsertComment AFTER INSERT ON comment
+--   FOR EACH ROW BEGIN
+--     -- Keep comment_count up-to-date.
+--     UPDATE `link`
+--       SET `comments`=`comments`+1
+--       WHERE id=NEW.link_id;
+--   END;
+--
+-- ------------------------------------------------------------
+-- afterDeleteComment
+-- ------------------------------------------------------------
+-- \author Jonathan Ferland
+-- \created April 10, 2009
+-- ------------------------------------------------------------
+-- DROP TRIGGER IF EXISTS afterDeleteComment;
+-- CREATE TRIGGER afterDeleteComment AFTER DELETE ON comment
+--   FOR EACH ROW BEGIN
+--     -- Keep comment_count up-to-date.
+--     UPDATE `link`
+--       SET `comments`=`comments`-1
+--       WHERE id=OLD.link_id;
+--   END;

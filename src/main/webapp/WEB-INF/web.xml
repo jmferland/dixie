@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <filter>
+        <filter-name>StripesFilter</filter-name>
+        <filter-class>net.sourceforge.stripes.controller.StripesFilter</filter-class>
+        <init-param>
+            <param-name>ActionResolver.Packages</param-name>
+            <param-value>dixie.web.action</param-value>
+        </init-param>
+        <init-param>
+            <!--
+                 Careful of what's in here because these packages (and their
+                 subpackages) are searched for things like TypeConverter-s and
+                 Formatter-s.
+            -->
+            <param-name>Extension.Packages</param-name>
+            <param-value>
+                dixie.web.ext,
+                org.stripesstuff.plugin.security
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>PopulationStrategy.Class</param-name>
+            <param-value>net.sourceforge.stripes.tag.BeanFirstPopulationStrategy</param-value>
+        </init-param>
+        <init-param>
+            <param-name>TypeConverterFactory.Class</param-name>
+            <param-value>dixie.web.ext.CustomTypeConverterFactory</param-value>
+        </init-param>
+        <init-param>
+            <param-name>FormatterFactory.Class</param-name>
+            <param-value>dixie.web.ext.CustomFormatterFactory</param-value>
+        </init-param>
+        <init-param>
+            <param-name>SecurityManager.Class</param-name>
+            <param-value>dixie.web.nonext.CustomSecurityManager</param-value>
+        </init-param>
+        
+        <!-- Support UTF-8 encoding. -->
+        <!--
+             \see http://stackoverflow.com/questions/138948/how-to-get-utf-8-working-in-java-webapps
+             The above URL is an EXTREMELY useful explanation of what needs to be
+             done to support UTF-8. Namely:
+
+             Add this to /etc/mysql/my.cnf:
+
+             "
+                [client]
+                port=3306
+                default-character-set=utf8
+
+                [mysql]
+                default-character-set=utf8
+             "
+
+             Add this to the mysql Resource URL:
+
+             "useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8"
+
+             Make sure stored procedures have signatures that look like:
+
+             "IN a_Variable TEXT CHARACTER SET utf8"
+
+             Also add a filter or setting to ensure HTTP requests and responses are
+             UTF-8 encoded.
+        -->
+        <init-param>
+            <param-name>LocalePicker.Locales</param-name>
+            <param-value>en_US:UTF-8</param-value>
+        </init-param>
+    </filter>
+
+    <filter>
+        <filter-name>DynamicMappingFilter</filter-name>
+        <filter-class>
+            net.sourceforge.stripes.controller.DynamicMappingFilter
+        </filter-class>
+    </filter>
+
+	<!-- Enable the use of FreeMarker, a JSP alternative. -->
+    <servlet>
+        <servlet-name>FreeMarker</servlet-name>
+        <servlet-class>dixie.web.view.StripesFreemarkerServlet</servlet-class>
+
+        <init-param>
+            <param-name>TemplatePath</param-name>
+            <param-value>/</param-value>
+        </init-param>
+        <init-param>
+            <param-name>template_update_delay</param-name>
+            <param-value>0</param-value> <!-- 0 is for dev only! Use higher value otherwise. -->
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+	<!-- Enable the use JSP tags in FreeMarker templates. -->
+    <!--
+    <servlet>
+        <servlet-name>jspSupportServlet</servlet-name>
+        <servlet-class>com.opensymphony.webwork.views.JspSupportServlet</servlet-class>
+        <load-on-startup>10</load-on-startup>
+    </servlet>
+    -->
+
+    <filter-mapping>
+        <filter-name>DynamicMappingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+
+	<!-- Tell the servlet container to treat files with .ftl extension as FreeMarker template. -->
+    <servlet-mapping>
+        <servlet-name>FreeMarker</servlet-name>
+        <url-pattern>*.ftl</url-pattern>
+    </servlet-mapping>
+
+    <!-- GuiceFilter enables the use of @RequestScoped and @SessionScoped scope annotations. -->
+    <!--
+    <filter>
+        <filter-name>GuiceFilter</filter-name>
+        <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>GuiceFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    -->
+
+    <welcome-file-list>
+        <welcome-file>/</welcome-file>
+    </welcome-file-list>
+
+    <resource-ref>
+        <description>DB Stored procedure access.</description>
+        <res-ref-name>jdbc/dixie_sproc</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+</web-app>
