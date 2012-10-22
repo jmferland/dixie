@@ -150,12 +150,14 @@ public class DaoManager
 		// No need to wrap a DaoException (it IS the wrapper).
 		catch (DaoException e)
 		{
+			logger.error("Error executing database command", e);
 			rollback(e);
 			throw e;
 		}
 		// Must catch all exceptions so we can rollback.
 		catch (Exception e)
 		{
+			logger.error("Error executing database command", e);
 			rollback(e);
 			throw new DaoException(e);
 		}
